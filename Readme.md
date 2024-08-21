@@ -4,8 +4,6 @@
 
 Auto Photo Printer is a C#-based Console designed to automatically detect new JPEG or JPG images added to a specified folder, convert them to a printable PDF, and send them to the default printer. This script is tailored for Windows OS and is ideal for scenarios where automated image printing is required.
 
-This project also provides C# Console that captures a photo from a camera, saves it, and prints the image in a specified position on an A4 paper. This is particularly useful for printing photos on pre-printed templates, such as newspaper-style layouts.
-
 ## Features
 
 - **Automatic Image Detection**: The script monitors a specified folder and automatically processes new `.jpg` or `.jpeg` files added to the folder.
