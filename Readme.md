@@ -31,6 +31,7 @@ Auto Photo Printer is a C#-based Console designed to automatically detect new JP
 ```
 
 3. Open project or solution file with Visual Studio
+4. Setup config.json
 
 
 
