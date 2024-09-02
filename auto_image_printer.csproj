@@ -25,7 +25,7 @@
     <MapFileExtensions>false</MapFileExtensions>
     <ProductName>Auto Image Printer</ProductName>
     <PublisherName>Chudisoft Technologies</PublisherName>
-    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationRevision>5</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>

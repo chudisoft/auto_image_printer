@@ -19,65 +19,76 @@ class Program
 
     static void Main(string[] args)
     {
-        string scriptDir = AppDomain.CurrentDomain.BaseDirectory;
-        string configFilePath = Path.Combine(scriptDir, "config.json");
-
-        if (!File.Exists(configFilePath))
+        try
         {
-            Console.WriteLine("Configuration file 'config.json' not found.");
-            return;
+            string scriptDir = AppDomain.CurrentDomain.BaseDirectory;
+            string configFilePath = Path.Combine(scriptDir, "config.json");
+
+            if (!File.Exists(configFilePath))
+            {
+                Console.WriteLine("Configuration file 'config.json' not found.");
+                return;
+            }
+            Console.WriteLine($"Configuration file: {configFilePath}");
+
+            string configFileContent = File.ReadAllText(configFilePath, System.Text.Encoding.UTF8);
+            var config = JsonConvert.DeserializeObject<Config>(configFileContent);
+            //var config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(configFilePath));
+
+            // Default image directory
+            string defaultImageDir = Path.Combine(scriptDir, "images");
+            EnsureDirectoryExists(defaultImageDir);
+
+            // Get user inputs from JSON config file
+            string folderPath = config.FolderPath ?? defaultImageDir;
+            Console.Write($"Watch for new images: {defaultImageDir}");
+            int x = config.XPosition;
+            int y = config.YPosition;
+            int width = config.Width;
+            int height = config.Height;
+
+            // Default image directory
+            //string scriptDir = AppDomain.CurrentDomain.BaseDirectory;
+            //string defaultImageDir = Path.Combine(scriptDir, "images");
+            //EnsureDirectoryExists(defaultImageDir);
+
+            // Get user inputs
+            //Console.Write($"Enter the folder path to watch for new images (default: {defaultImageDir}): ");
+            //string folderPath = Console.ReadLine();
+            //if (string.IsNullOrEmpty(folderPath)) folderPath = defaultImageDir;
+            //
+            //Console.Write("Enter the x position (points): ");
+            //int x = int.TryParse(Console.ReadLine(), out x) ? x : 0;
+            //
+            //Console.Write("Enter the y position (points): ");
+            //int y = int.TryParse(Console.ReadLine(), out y) ? y : 0;
+            //
+            //Console.Write("Enter the width (points): ");
+            //int width = int.TryParse(Console.ReadLine(), out width) ? width : 200;
+            //
+            //Console.Write("Enter the height (points): ");
+            //int height = int.TryParse(Console.ReadLine(), out height) ? height : 200;
+
+            // Create event handler
+            FileSystemWatcher watcher = new FileSystemWatcher();
+            watcher.Path = folderPath;
+            watcher.Filter = "*.*"; // Watch all files
+
+            watcher.Created += (sender, e) => ProcessFile(e.FullPath, x, y, width, height);
+            //watcher.Changed += (sender, e) => ProcessFile(e.FullPath, x, y, width, height);
+            //watcher.Renamed += (sender, e) => ProcessFile(e.FullPath, x, y, width, height);
+
+            watcher.EnableRaisingEvents = true;
+
+            // Start observing
+            Console.WriteLine("Script is now waiting for new images to be added to the folder.");
+            Console.WriteLine("Press Ctrl+C to stop the script.");
+
         }
-
-        var config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(configFilePath));
-
-        // Default image directory
-        string defaultImageDir = Path.Combine(scriptDir, "images");
-        EnsureDirectoryExists(defaultImageDir);
-
-        // Get user inputs from JSON config file
-        string folderPath = config.FolderPath ?? defaultImageDir;
-        int x = config.XPosition;
-        int y = config.YPosition;
-        int width = config.Width;
-        int height = config.Height;
-
-        // Default image directory
-        //string scriptDir = AppDomain.CurrentDomain.BaseDirectory;
-        //string defaultImageDir = Path.Combine(scriptDir, "images");
-        //EnsureDirectoryExists(defaultImageDir);
-
-        // Get user inputs
-        //Console.Write($"Enter the folder path to watch for new images (default: {defaultImageDir}): ");
-        //string folderPath = Console.ReadLine();
-        //if (string.IsNullOrEmpty(folderPath)) folderPath = defaultImageDir;
-        //
-        //Console.Write("Enter the x position (points): ");
-        //int x = int.TryParse(Console.ReadLine(), out x) ? x : 0;
-        //
-        //Console.Write("Enter the y position (points): ");
-        //int y = int.TryParse(Console.ReadLine(), out y) ? y : 0;
-        //
-        //Console.Write("Enter the width (points): ");
-        //int width = int.TryParse(Console.ReadLine(), out width) ? width : 200;
-        //
-        //Console.Write("Enter the height (points): ");
-        //int height = int.TryParse(Console.ReadLine(), out height) ? height : 200;
-
-        // Create event handler
-        FileSystemWatcher watcher = new FileSystemWatcher();
-        watcher.Path = folderPath;
-        watcher.Filter = "*.*"; // Watch all files
-
-        watcher.Created += (sender, e) => ProcessFile(e.FullPath, x, y, width, height);
-        //watcher.Changed += (sender, e) => ProcessFile(e.FullPath, x, y, width, height);
-        //watcher.Renamed += (sender, e) => ProcessFile(e.FullPath, x, y, width, height);
-
-        watcher.EnableRaisingEvents = true;
-
-        // Start observing
-        Console.WriteLine("Script is now waiting for new images to be added to the folder.");
-        Console.WriteLine("Press Ctrl+C to stop the script.");
-
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occured: \n\r{ex.Message}");
+        }
         // Keep the application running
         while (true)
         {
