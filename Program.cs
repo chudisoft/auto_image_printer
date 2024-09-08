@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
@@ -40,12 +41,12 @@ class Program
             EnsureDirectoryExists(defaultImageDir);
 
             // Get user inputs from JSON config file
-            string folderPath = config.FolderPath ?? defaultImageDir;
-            Console.Write($"Watch for new images: {defaultImageDir}");
-            int x = config.XPosition;
-            int y = config.YPosition;
-            int width = config.Width;
-            int height = config.Height;
+            string folderPath = config.folder_path ?? defaultImageDir;
+            Console.WriteLine($"Watch for new images: {folderPath}");
+            int x = config.x;
+            int y = config.y;
+            int width = config.width;
+            int height = config.height;
 
             // Default image directory
             //string scriptDir = AppDomain.CurrentDomain.BaseDirectory;
@@ -238,10 +239,10 @@ class Program
     // JSON Config class
     public class Config
     {
-        public string FolderPath { get; set; }
-        public int XPosition { get; set; }
-        public int YPosition { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
+        public string folder_path { get; set; }
+        public int x { get; set; }
+        public int y { get; set; }
+        public int width { get; set; }
+        public int height { get; set; }
     }
 }
